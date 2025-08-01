@@ -552,6 +552,55 @@ function resetAutoTestSystem() {
     }
 }
 
+// Ishlatilgan testlarni tozalash
+function clearAllUsedTests() {
+    if (confirm('Barcha ishlatilgan testlar ro\'yxatini tozalashni xohlaysizmi? Bu testlarni qayta ishlatish imkonini beradi.')) {
+        localStorage.removeItem('used_tests');
+        localStorage.removeItem('last_test_completion');
+        
+        updateAutoTestStats();
+        alert('Ishlatilgan testlar ro\'yxati tozalandi!');
+    }
+}
+
+// Testlar bazasini qayta boshlash
+function resetTestDatabase() {
+    if (confirm('Testlar bazasini qayta boshlashni xohlaysizmi? Bu barcha testlarni va ishlatilgan testlar ro\'yxatini tozalaydi.')) {
+        localStorage.removeItem('reading_questions');
+        localStorage.removeItem('used_tests');
+        localStorage.removeItem('last_test_completion');
+        
+        renderTable();
+        updateStats();
+        updateAutoTestStats();
+        alert('Testlar bazasi qayta boshlangandi!');
+    }
+}
+
+// Test statistikasini ko'rsatish
+function showTestStatistics() {
+    const usedTests = JSON.parse(localStorage.getItem('used_tests') || '[]');
+    const currentQuestions = JSON.parse(localStorage.getItem('reading_questions') || '[]');
+    const totalTests = 100; // TEST_DATABASE uzunligi
+    
+    const usedCount = usedTests.length;
+    const currentCount = currentQuestions.length;
+    const availableCount = totalTests - usedCount;
+    
+    console.log('Test statistikasi:', {
+        jami: totalTests,
+        ishlatilgan: usedCount,
+        hozirgi: currentCount,
+        mavjud: availableCount
+    });
+    
+    alert(`📊 Test statistikasi:\n\n` +
+          `📚 Jami testlar: ${totalTests}\n` +
+          `✅ Ishlatilgan: ${usedCount}\n` +
+          `📝 Hozirgi testlar: ${currentCount}\n` +
+          `🆕 Mavjud testlar: ${availableCount}`);
+}
+
 // Event Listeners
 document.addEventListener('DOMContentLoaded', function() {
     // Login holatini tekshirish

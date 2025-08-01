@@ -323,9 +323,16 @@ function addAutomaticTests() {
         return;
     }
     
+    // Hozirgi yuklangan testlarni ham hisobga olish
+    const currentTestTexts = questions.map(q => q.text);
     const usedTests = JSON.parse(localStorage.getItem('used_tests') || '[]');
+    
+    // Barcha ishlatilgan testlarni birlashtirish (ham saqlangan, ham hozirgi)
+    const allUsedTests = [...new Set([...usedTests, ...currentTestTexts])];
+    
+    // Mavjud bo'lmagan testlarni topish
     const availableTests = TEST_DATABASE.filter(test => 
-        !usedTests.some(used => used.text === test.text)
+        !allUsedTests.includes(test.text)
     );
     
     if (availableTests.length === 0) {
@@ -339,26 +346,31 @@ function addAutomaticTests() {
     const newTests = [];
     const usedTestTexts = [];
     
-    for (let i = 0; i < Math.min(testCount, availableTests.length); i++) {
-        const randomIndex = Math.floor(Math.random() * availableTests.length);
-        const selectedTest = availableTests[randomIndex];
-        
+    // Fisher-Yates shuffle algoritmi bilan tasodifiy tanlash
+    const shuffledTests = [...availableTests];
+    for (let i = shuffledTests.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledTests[i], shuffledTests[j]] = [shuffledTests[j], shuffledTests[i]];
+    }
+    
+    // Kerakli miqdordagi testlarni olish
+    const testsToAdd = Math.min(testCount, shuffledTests.length);
+    for (let i = 0; i < testsToAdd; i++) {
+        const selectedTest = shuffledTests[i];
         newTests.push(selectedTest);
         usedTestTexts.push(selectedTest.text);
-        
-        // Tanlangan testni availableTests dan olib tashlash
-        availableTests.splice(randomIndex, 1);
     }
     
     // Yangi testlarni qo'shish
     questions = [...questions, ...newTests];
     localStorage.setItem('reading_questions', JSON.stringify(questions));
     
-    // Ishlatilgan testlarni saqlash
-    const updatedUsedTests = [...usedTests, ...usedTestTexts];
+    // Ishlatilgan testlarni saqlash (ham avvalgi, ham yangi)
+    const updatedUsedTests = [...new Set([...usedTests, ...usedTestTexts])];
     localStorage.setItem('used_tests', JSON.stringify(updatedUsedTests));
     
     console.log(`${newTests.length} ta yangi test avtomatik qo'shildi!`);
+    console.log('Ishlatilgan testlar soni:', updatedUsedTests.length);
     
     // Foydalanuvchiga xabar berish
     showAutoTestNotification(newTests.length);
@@ -443,13 +455,28 @@ function checkAutoTestAddition() {
         // Agar oxirgi test tugatilganidan ko'p vaqt o'tgan bo'lsa
         if (timeDiff > delayMs) {
             console.log(`Oxirgi test tugatilganidan ${delayMinutes} daqiqadan ko'p vaqt o'tgan, yangi testlar qo'shiladi`);
-            addAutomaticTests();
-            localStorage.setItem('last_test_completion', currentTime.toISOString());
+            
+            // Hozirgi testlar sonini tekshirish
+            const currentTestCount = questions.length;
+            const minTestCount = 5; // Minimal testlar soni
+            
+            if (currentTestCount < minTestCount) {
+                console.log(`Hozirgi testlar soni (${currentTestCount}) minimal miqdordan (${minTestCount}) kam, yangi testlar qo'shiladi`);
+                addAutomaticTests();
+                localStorage.setItem('last_test_completion', currentTime.toISOString());
+            } else {
+                console.log(`Hozirgi testlar soni (${currentTestCount}) yetarli, yangi testlar qo'shilmaydi`);
+            }
         } else {
             console.log(`Oxirgi test tugatilganidan ${Math.round(timeDiff / 60000)} daqiqa o'tgan, hali vaqt emas`);
         }
     } else {
-        console.log('Oxirgi test tugatilgan vaqt topilmadi');
+        console.log('Oxirgi test tugatilgan vaqt topilmadi, dastlabki testlar qoshiladi');
+        // Dastlabki testlar qo'shish
+        if (questions.length === 0) {
+            addAutomaticTests();
+            localStorage.setItem('last_test_completion', new Date().toISOString());
+        }
     }
 }
 
