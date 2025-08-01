@@ -115,6 +115,40 @@
                 max-width: 56rem;
             }
         }
+        
+        /* Yangi tugmalar uchun responsive stillar */
+        .lesson-buttons {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        /* Tugmalar uchun hover effektlari */
+        .lesson-btn {
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        
+        .lesson-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Mobile menyu animatsiyasi */
+        #mobileMenu {
+            transition: all 0.3s ease-in-out;
+        }
+        
+        #mobileMenu.hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+        
+        #mobileMenu:not(.hidden) {
+            transform: translateY(0);
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
@@ -123,7 +157,9 @@
         <header class="flex-header w-full fixed top-0 left-0 z-50 bg-gradient-to-r from-indigo-500/80 to-pink-400/80 shadow-2xl backdrop-blur-md py-3 sm:py-4">
             <div class="max-w-4xl mx-auto flex items-center justify-between px-4 sm:px-8">
                 <span class="text-lg sm:text-2xl font-extrabold text-white tracking-wide drop-shadow">Reading Test</span>
-                <div class="flex items-center gap-3 sm:gap-6">
+                
+                <!-- Desktop uchun elementlar -->
+                <div class="hidden lg:flex items-center gap-4 sm:gap-6 lg:gap-8">
                     <div class="text-white font-semibold text-sm sm:text-base">
                         <span id="progress-text">0%</span> bajarildi
                     </div>
@@ -138,17 +174,74 @@
                             <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
                         </svg>
                     </button>
+                    <!-- Desktop uchun yangi tugmalar -->
+                    <div class="lesson-buttons hidden lg:flex items-center gap-4">
+                        <button onclick="openBeginnerLessons()" class="lesson-btn bg-gradient-to-r from-green-500 to-emerald-600 text-white px-3 py-2 rounded-lg text-xs font-semibold hover:scale-105 transition-all duration-300 shadow-lg">
+                            Beginner darsliklarni o'rganish
+                        </button>
+                        <span class="text-white font-semibold text-sm">va</span>
+                        <button onclick="openIELTSLessons()" class="lesson-btn bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-2 rounded-lg text-xs font-semibold hover:scale-105 transition-all duration-300 shadow-lg">
+                            IELTS darsligini o'rganish
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Mobile menyu tugmasi -->
+                <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="lg:hidden text-white p-2 hover:bg-white/20 rounded-lg transition-all duration-300">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Mobile menyu -->
+            <div id="mobileMenu" class="lg:hidden hidden bg-gradient-to-r from-indigo-600/95 to-pink-500/95 backdrop-blur-md border-t border-white/20">
+                <div class="px-4 sm:px-8 py-4 space-y-4">
+                    <!-- Progress -->
+                    <div class="text-center">
+                        <div class="text-white font-semibold text-sm sm:text-base">
+                            <span id="progress-text-mobile">0%</span> bajarildi
+                        </div>
+                    </div>
+                    
+                    <!-- Icons -->
+                    <div class="flex justify-center gap-4">
+                        <button onclick="showQuestionsModal(); hideMobileMenu();" class="relative p-3 text-white hover:bg-white/20 rounded-full transition-all duration-300">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/>
+                            </svg>
+                            <span id="notification-count-mobile" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">0</span>
+                        </button>
+                        <button onclick="showProfileModal(); hideMobileMenu();" class="relative p-3 text-white hover:bg-white/20 rounded-full transition-all duration-300">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <!-- Tugmalar -->
+                    <div class="flex flex-col gap-3">
+                        <button onclick="openBeginnerLessons(); hideMobileMenu();" class="lesson-btn bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-3 rounded-lg text-sm font-semibold hover:scale-105 transition-all duration-300 shadow-lg">
+                            Beginner darsliklarni o'rganish
+                        </button>
+                        <div class="text-center">
+                            <span class="text-white font-semibold text-sm">va</span>
+                        </div>
+                        <button onclick="openIELTSLessons(); hideMobileMenu();" class="lesson-btn bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-3 rounded-lg text-sm font-semibold hover:scale-105 transition-all duration-300 shadow-lg">
+                            IELTS darsligini o'rganish
+                        </button>
+                    </div>
                 </div>
             </div>
         </header>
 
         <!-- Progress Bar -->
-        <div class="flex-header fixed top-16 sm:top-20 left-0 w-full bg-white/20 h-1 z-40">
+        <div class="flex-header fixed top-16 sm:top-20 lg:top-20 xl:top-20 left-0 w-full bg-white/20 h-1 z-40">
             <div id="progress-bar" class="progress-bar h-full bg-gradient-to-r from-indigo-500 to-pink-500 rounded-r-full" style="width: 0%"></div>
         </div>
 
         <!-- Main Content -->
-        <main class="flex-main pt-20 sm:pt-24">
+        <main class="flex-main pt-20 sm:pt-24 lg:pt-24 xl:pt-24">
             <div class="flex-content">
                 <div id="app" class="glass-card rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 shadow-2xl fade-in">
                     <!-- Content will be dynamically loaded here -->

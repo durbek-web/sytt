@@ -491,6 +491,46 @@ function incrementStudentVisits() {
 function updateNotificationCount() {
     const questionCount = questions.length;
     document.getElementById('notification-count').textContent = questionCount;
+    
+    // Mobile uchun ham yangilash
+    const mobileNotificationCount = document.getElementById('notification-count-mobile');
+    if (mobileNotificationCount) {
+        mobileNotificationCount.textContent = questionCount;
+    }
+}
+
+// Mobile menyu boshqaruvi
+function toggleMobileMenu() {
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    
+    if (mobileMenu && mobileMenuBtn) {
+        mobileMenu.classList.toggle('hidden');
+        
+        // Tugma ikonini o'zgartirish
+        const svg = mobileMenuBtn.querySelector('svg');
+        if (mobileMenu.classList.contains('hidden')) {
+            // Yashirilgan holat - hamburger ikon
+            svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>';
+        } else {
+            // Ochilgan holat - X ikon
+            svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>';
+        }
+    }
+}
+
+// Mobile menyu yashirish
+function hideMobileMenu() {
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    
+    if (mobileMenu && mobileMenuBtn) {
+        mobileMenu.classList.add('hidden');
+        
+        // Tugma ikonini qaytarish
+        const svg = mobileMenuBtn.querySelector('svg');
+        svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>';
+    }
 }
 
 // Savollar modalini ko'rsatish
@@ -1200,6 +1240,199 @@ document.addEventListener('submit', function(e) {
         handleRegistrationSubmit(e);
     }
 });
+
+// Beginner darsliklarni ochish funksiyasi
+function openBeginnerLessons() {
+    // Yangi oynada ochish yoki modal ko'rsatish
+    const lessonUrl = 'https://www.youtube.com/results?search_query=beginner+english+lessons';
+    window.open(lessonUrl, '_blank');
+    
+    // Yoki modal ko'rsatish
+    showBeginnerLessonsModal();
+}
+
+// IELTS darsliklarni ochish funksiyasi
+function openIELTSLessons() {
+    // Yangi oynada ochish yoki modal ko'rsatish
+    const lessonUrl = 'https://www.youtube.com/results?search_query=ielts+preparation+lessons';
+    window.open(lessonUrl, '_blank');
+    
+    // Yoki modal ko'rsatish
+    showIELTSLessonsModal();
+}
+
+// Beginner darsliklar modalini ko'rsatish
+function showBeginnerLessonsModal() {
+    const modal = document.createElement('div');
+    modal.id = 'beginnerLessonsModal';
+    modal.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4';
+    modal.innerHTML = `
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="bg-gradient-to-r from-green-500 to-emerald-600 p-6">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-2xl font-bold text-white">Beginner Darsliklar</h2>
+                    <button onclick="closeBeginnerLessonsModal()" class="text-white hover:bg-white/20 p-2 rounded-full transition-all duration-300">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="p-6">
+                <div class="space-y-4">
+                    <div class="text-center mb-6">
+                        <div class="text-4xl mb-4">📚</div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Boshlang'ich darajadagi darsliklar</h3>
+                        <p class="text-gray-600">Ingliz tilini noldan o'rganish uchun foydali materiallar</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <a href="https://www.youtube.com/results?search_query=basic+english+grammar" target="_blank" class="bg-gray-50 rounded-xl p-4 hover:bg-gray-100 transition-all duration-300 border border-gray-200">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl">📖</span>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Grammatika</h4>
+                                    <p class="text-sm text-gray-600">Asosiy grammatika qoidalari</p>
+                                </div>
+                            </div>
+                        </a>
+                        
+                        <a href="https://www.youtube.com/results?search_query=basic+english+vocabulary" target="_blank" class="bg-gray-50 rounded-xl p-4 hover:bg-gray-100 transition-all duration-300 border border-gray-200">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl">📝</span>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Lug'at</h4>
+                                    <p class="text-sm text-gray-600">Kundalik so'zlashuv uchun so'zlar</p>
+                                </div>
+                            </div>
+                        </a>
+                        
+                        <a href="https://www.youtube.com/results?search_query=english+pronunciation+for+beginners" target="_blank" class="bg-gray-50 rounded-xl p-4 hover:bg-gray-100 transition-all duration-300 border border-gray-200">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl">🎤</span>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Talaffuz</h4>
+                                    <p class="text-sm text-gray-600">To'g'ri talaffuz qilish</p>
+                                </div>
+                            </div>
+                        </a>
+                        
+                        <a href="https://www.youtube.com/results?search_query=basic+english+conversation" target="_blank" class="bg-gray-50 rounded-xl p-4 hover:bg-gray-100 transition-all duration-300 border border-gray-200">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl">💬</span>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">So'zlashuv</h4>
+                                    <p class="text-sm text-gray-600">Oddiy so'zlashuvlar</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <div class="pt-4">
+                        <button onclick="closeBeginnerLessonsModal()" class="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white py-3 rounded-xl font-semibold hover:scale-105 transition-all duration-300 shadow-lg">
+                            Yopish
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+// IELTS darsliklar modalini ko'rsatish
+function showIELTSLessonsModal() {
+    const modal = document.createElement('div');
+    modal.id = 'ieltsLessonsModal';
+    modal.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4';
+    modal.innerHTML = `
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-6">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-2xl font-bold text-white">IELTS Darsliklar</h2>
+                    <button onclick="closeIELTSLessonsModal()" class="text-white hover:bg-white/20 p-2 rounded-full transition-all duration-300">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <div class="p-6">
+                <div class="space-y-4">
+                    <div class="text-center mb-6">
+                        <div class="text-4xl mb-4">🎯</div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">IELTS tayyorgarlik darsliklari</h3>
+                        <p class="text-gray-600">IELTS imtihoniga tayyorgarlik uchun maxsus materiallar</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <a href="https://www.youtube.com/results?search_query=ielts+reading+strategies" target="_blank" class="bg-gray-50 rounded-xl p-4 hover:bg-gray-100 transition-all duration-300 border border-gray-200">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl">📖</span>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Reading</h4>
+                                    <p class="text-sm text-gray-600">O'qish bo'limi strategiyalari</p>
+                                </div>
+                            </div>
+                        </a>
+                        
+                        <a href="https://www.youtube.com/results?search_query=ielts+writing+task+1+2" target="_blank" class="bg-gray-50 rounded-xl p-4 hover:bg-gray-100 transition-all duration-300 border border-gray-200">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl">✍️</span>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Writing</h4>
+                                    <p class="text-sm text-gray-600">Yozish bo'limi darsliklari</p>
+                                </div>
+                            </div>
+                        </a>
+                        
+                        <a href="https://www.youtube.com/results?search_query=ielts+listening+practice" target="_blank" class="bg-gray-50 rounded-xl p-4 hover:bg-gray-100 transition-all duration-300 border border-gray-200">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl">🎧</span>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Listening</h4>
+                                    <p class="text-sm text-gray-600">Tinglash bo'limi mashqlari</p>
+                                </div>
+                            </div>
+                        </a>
+                        
+                        <a href="https://www.youtube.com/results?search_query=ielts+speaking+part+1+2+3" target="_blank" class="bg-gray-50 rounded-xl p-4 hover:bg-gray-100 transition-all duration-300 border border-gray-200">
+                            <div class="flex items-center gap-3">
+                                <span class="text-2xl">🗣️</span>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Speaking</h4>
+                                    <p class="text-sm text-gray-600">Gapirayotgan bo'limi</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <div class="pt-4">
+                        <button onclick="closeIELTSLessonsModal()" class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 rounded-xl font-semibold hover:scale-105 transition-all duration-300 shadow-lg">
+                            Yopish
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+// Modal yashirish funksiyalari
+function closeBeginnerLessonsModal() {
+    const modal = document.getElementById('beginnerLessonsModal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+function closeIELTSLessonsModal() {
+    const modal = document.getElementById('ieltsLessonsModal');
+    if (modal) {
+        modal.remove();
+    }
+}
 
 // Klaviatura bilan boshqarish
 document.addEventListener('keydown', function(e) {
